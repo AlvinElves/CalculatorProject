@@ -3,7 +3,13 @@ from tkinter import *
 
 def press_number_button(number):
     global equation_text
-    equation_text = equation_text + str(number)
+    global equal_pressed
+    if equal_pressed is True:
+        reset()
+    if equation_text == "0":
+        equation_text = str(number)
+    else:
+        equation_text = equation_text + str(number)
     equation_label.set(equation_text)
     total_equation_label.set(total_equation_text)
 
@@ -13,14 +19,38 @@ def press_function_button(expression):
     global total_equation_text
     global equation_text
     global number_1
-    if '.' in equation_text:
-        number_1 = float(equation_text)
+    global number_2
+    if not expression_operator:
+        if '.' in equation_text:
+            number_1 = float(equation_text)
+        else:
+            number_1 = int(equation_text)
+
+        equation_text = ""
+        expression_operator = expression
+        total_equation_text = str(number_1) + " " + expression
+        total_equation_label.set(total_equation_text)
+
     else:
-        number_1 = int(equation_text)
-    equation_text = ""
-    expression_operator = expression
-    total_equation_text = str(number_1) + " " + expression
-    total_equation_label.set(total_equation_text)
+        if '.' in equation_text:
+            number_2 = float(equation_text)
+        else:
+            number_2 = int(equation_text)
+
+        if expression_operator == "+":
+            number_1 = number_1 + number_2
+        elif expression_operator == "-":
+            number_1 = number_1 - number_2
+        elif expression_operator == "*":
+            number_1 = number_1 * number_2
+        elif expression_operator == "/":
+            number_1 = number_1 / number_2
+
+        equation_text = ""
+        expression_operator = expression
+        total_equation_text = str(number_1) + " " + expression
+        total_equation_label.set(total_equation_text)
+        equation_label.set(str(number_1))
 
 
 def press_equal_button():
@@ -29,6 +59,8 @@ def press_equal_button():
     global equation_text
     global number_2
     global result
+    global equal_pressed
+    equal_pressed = True
     if '.' in equation_text:
         number_2 = float(equation_text)
     else:
@@ -49,12 +81,24 @@ def press_equal_button():
     equation_label.set(str(result))
 
     total_equation_text = ""
+    expression_operator = ""
 
 
-def press_clear_button():
+def reset():
+    global expression_operator
+    global total_equation_text
     global equation_text
+    global number_1
+    global number_2
+    global equal_pressed
+    equal_pressed = False
+    expression_operator = ""
+    total_equation_text = ""
     equation_text = ""
+    number_1=0
+    number_2=0
     equation_label.set(equation_text)
+    total_equation_label.set(total_equation_text)
 
 
 def press_negative_button():
@@ -69,7 +113,10 @@ def press_negative_button():
 def press_delete_button():
     global equation_text
     length = len(equation_text)
-    equation_text = equation_text[:length-1]
+    if length == 1:
+        equation_text = "0"
+    else:
+        equation_text = equation_text[:length-1]
     equation_label.set(equation_text)
 
 
@@ -84,6 +131,7 @@ expression_operator = ""
 number_1 = 0
 number_2 = 0
 result = 0
+equal_pressed = False
 total_equation_label = StringVar()
 equation_label = StringVar()
 
@@ -148,7 +196,7 @@ button_divide.grid(column=3, row=3)
 button_delete = Button(screen, text="BACK", bg="white", height=3, width=6, font=10, command=lambda: press_delete_button())
 button_delete.grid(column=2, row=3, pady=5)
 
-button_clear = Button(screen, text="CLEAR", bg="red", height=3, width=13, font=10, command=lambda: press_clear_button())
+button_clear = Button(screen, text="CLEAR", bg="red", height=3, width=13, font=10, command=lambda: reset())
 button_clear.grid(column=0, row=3, columnspan=2)
 
 
