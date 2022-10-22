@@ -16,6 +16,7 @@ def press_number_button(number):
 
 def press_function_button(expression):
     global type_chose
+    global history_text
     global equation_text
     if type_chose == 1:
         global expression_operator
@@ -39,6 +40,8 @@ def press_function_button(expression):
             else:
                 number_2 = int(equation_text)
 
+            temp_number_1 = number_1
+
             if expression_operator == "+":
                 number_1 = number_1 + number_2
             elif expression_operator == "-":
@@ -47,6 +50,9 @@ def press_function_button(expression):
                 number_1 = number_1 * number_2
             elif expression_operator == "/":
                 number_1 = number_1 / number_2
+
+            history_text = str(temp_number_1) + " " + str(expression_operator) + " " + str(number_2) + " = " + str(number_1) + "\n" + history_text
+            history_label.set(history_text)
 
             equation_text = ""
             expression_operator = expression
@@ -64,31 +70,46 @@ def press_function_button(expression):
 def press_equal_button():
     global type_chose
     global equation_text
+    global history_text
     global result
+    global number_1
     global equal_pressed
     if type_chose == 1:
         global expression_operator
         global total_equation_text
         global number_2
         equal_pressed = True
-        if '.' in equation_text:
-            number_2 = float(equation_text)
-        else:
-            number_2 = int(equation_text)
-        equation_text = ""
-        total_equation_text = total_equation_text + " " + str(number_2) + " ="
-        total_equation_label.set(total_equation_text)
+        if expression_operator:
+            if equation_text == "":
+                number_2 = number_1
+            else:
+                if '.' in equation_text:
+                    number_2 = float(equation_text)
+                else:
+                    number_2 = int(equation_text)
+            equation_text = ""
+            total_equation_text = total_equation_text + " " + str(number_2) + " ="
+            total_equation_label.set(total_equation_text)
 
-        if expression_operator == "+":
-            result = number_1 + number_2
-        elif expression_operator == "-":
-            result = number_1 - number_2
-        elif expression_operator == "*":
-            result = number_1 * number_2
-        elif expression_operator == "/":
-            result = number_1 / number_2
+            if expression_operator == "+":
+                result = number_1 + number_2
+            elif expression_operator == "-":
+                result = number_1 - number_2
+            elif expression_operator == "*":
+                result = number_1 * number_2
+            elif expression_operator == "/":
+                result = number_1 / number_2
+        else:
+            if '.' in equation_text:
+                number_1 = float(equation_text)
+            else:
+                number_1 = int(equation_text)
+            result = number_1
+            total_equation_text = str(number_1) + " ="
 
         equation_label.set(str(result))
+        history_text = total_equation_text + " " + str(result) + "\n" + history_text
+        history_label.set(history_text)
 
         total_equation_text = ""
         expression_operator = ""
@@ -96,7 +117,10 @@ def press_equal_button():
         equal_pressed = True
         result = eval(equation_text)
         equation_label.set(str(result))
+        total_equation_text = " ".join(equation_text) + " ="
         total_equation_label.set(" ".join(equation_text) + " =")
+        history_text = total_equation_text + " " + str(result) + "\n" + history_text
+        history_label.set(history_text)
 
 
 def reset():
@@ -117,15 +141,12 @@ def reset():
 
 
 def press_negative_button():
-    try:
-        global equation_text
-        if '.' in equation_text:
-            equation_text = str(-float(equation_text))
-        else:
-            equation_text = str(-int(equation_text))
-        equation_label.set(equation_text)
-    except:
-        print("Cannot use negative")
+    global equation_text
+    if '.' in equation_text:
+        equation_text = str(-float(equation_text))
+    else:
+        equation_text = str(-int(equation_text))
+    equation_label.set(equation_text)
 
 
 def press_delete_button():
@@ -157,9 +178,10 @@ def press_type_button():
 screen = Tk()
 screen.title("Simple Calculator")
 screen.configure(background='gray')
-screen.geometry("338x650")
+screen.geometry("500x650")
 
 equation_text = ""
+history_text = ""
 total_equation_text = ""
 expression_operator = ""
 type_label_text = "Type: Single"
@@ -172,6 +194,13 @@ equation_label = StringVar()
 type_label = StringVar()
 type_label.set(type_label_text)
 type_chose = 1
+history_label = StringVar()
+
+history_name = Label(screen, text="HISTORY", bg="darkgray", fg="red", height=2, width=23)
+history_name.grid(column=4, row=0, padx=3, pady=3)
+
+history_field = Label(screen, textvariable=history_label, bg="white", fg="black", height=39, width=23, anchor="n")
+history_field.grid(column=4, row=1, rowspan=9)
 
 type_text_field = Label(screen, textvariable=type_label, bg="white", fg="red", height=3, width=12)
 type_text_field.grid(column=2, row=0, rowspan=2)
@@ -187,10 +216,10 @@ type_Multiple.grid(column=0, row=1, columnspan=2)
 
 total_text_field = Label(screen, textvariable=total_equation_label, font=("Arial", 12), bg="gray", fg="white", width=34,
                          anchor="e")
-total_text_field.grid(columnspan=5, row=2)
+total_text_field.grid(columnspan=4, column=0, row=2)
 
 text_field = Label(screen, textvariable=equation_label, font=("Arial", 24), bg="white", width=16, height=2, anchor="e")
-text_field.grid(columnspan=5, row=3)
+text_field.grid(columnspan=4, column=0, row=3)
 
 button_1 = Button(screen, text=1, height=3, width=6, font=10, command=lambda: press_number_button(1))
 button_1.grid(column=0, row=8)
