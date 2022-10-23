@@ -178,7 +178,7 @@ def press_type_button():
 screen = Tk()
 screen.title("Simple Calculator")
 screen.configure(background='gray')
-screen.geometry("500x650")
+screen.geometry("470x560")
 
 equation_text = ""
 history_text = ""
@@ -196,29 +196,29 @@ type_label.set(type_label_text)
 type_chose = 1
 history_label = StringVar()
 
-history_name = Label(screen, text="HISTORY", bg="darkgray", fg="red", height=2, width=23)
-history_name.grid(column=4, row=0, padx=3, pady=3)
+history_name = Label(screen, text="HISTORY", bg="darkgray", fg="red", height=2, width=20)
+history_name.grid(column=4, row=0, padx=5, pady=3)
 
-history_field = Label(screen, textvariable=history_label, bg="white", fg="black", height=39, width=23, anchor="n")
-history_field.grid(column=4, row=1, rowspan=9)
+history_field = Label(screen, textvariable=history_label, font=("Arial", 10), bg="white", fg="black", height=31, width=18, anchor="ne")
+history_field.grid(column=4, row=1, rowspan=9, padx=5)
 
 type_text_field = Label(screen, textvariable=type_label, bg="white", fg="red", height=3, width=12)
 type_text_field.grid(column=2, row=0, rowspan=2)
 
-type_Single = Button(screen, text="Single Expression", fg="black", height=2, width=14, bg="white",
+type_Single = Button(screen, text="Single Operator", fg="black", height=2, width=13, bg="white",
                      command=lambda: press_type_button())
 type_Single.grid(column=0, row=0, columnspan=2, pady=3)
 type_Single["state"] = "disabled"
 
-type_Multiple = Button(screen, text="Multiple Expression", fg="black", height=2, width=14, bg="white",
+type_Multiple = Button(screen, text="Multiple Operator", fg="black", height=2, width=13, bg="white",
                        command=lambda: press_type_button())
 type_Multiple.grid(column=0, row=1, columnspan=2)
 
-total_text_field = Label(screen, textvariable=total_equation_label, font=("Arial", 12), bg="gray", fg="white", width=34,
+total_text_field = Label(screen, textvariable=total_equation_label, font=("Arial", 12), bg="gray", fg="white", width=27,
                          anchor="e")
 total_text_field.grid(columnspan=4, column=0, row=2)
 
-text_field = Label(screen, textvariable=equation_label, font=("Arial", 24), bg="white", width=16, height=2, anchor="e")
+text_field = Label(screen, textvariable=equation_label, font=("Arial", 24), bg="white", width=13, height=2, anchor="e")
 text_field.grid(columnspan=4, column=0, row=3)
 
 button_1 = Button(screen, text=1, height=3, width=6, font=10, command=lambda: press_number_button(1))
@@ -240,7 +240,7 @@ button_6 = Button(screen, text=6, height=3, width=6, font=10, command=lambda: pr
 button_6.grid(column=2, row=7)
 
 button_7 = Button(screen, text=7, height=3, width=6, font=10, command=lambda: press_number_button(7))
-button_7.grid(column=0, row=6, padx=7)
+button_7.grid(column=0, row=6, padx=12)
 
 button_8 = Button(screen, text=8, height=3, width=6, font=10, command=lambda: press_number_button(8))
 button_8.grid(column=1, row=6)
